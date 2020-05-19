@@ -1,32 +1,43 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="main">
+      <table>
+        <tr>
+          <td colspan="2">Công cụ tính chỉ số NH3</td>
+        </tr>
+        <tr>
+          <td>pH</td>
+          <td><input v-model.number="ph" type="number" value="" /></td>
+        </tr>
+        <tr>
+          <td>Nhiệt độ (C)</td>
+          <td><input v-model.number="temperature" type="number" value="" /></td>
+        </tr>
+        <tr>
+          <td>độ mặn (ppt)</td>
+          <td><input v-model.number="salinity" type="number" value="" /></td>
+        </tr>
+        <tr>
+          <td>Lượng NH3/NH4+ đo được</td>
+          <td><input v-model.number="ammonia" type="number" value="" /></td>
+        </tr>
+        <tr>
+          <td>NH3 (mg/L hay ppm)</td>
+          <td>{{result}}</td>
+        </tr>
+        <tr>
+          <td colspan="2">Khuyến cáo: <span :style="{'color': this.level}">{{message}}</span></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            Đọc thêm <a href="https://www.patroutintheclassroom.org/docs/default-source/resources/how-to-calculate-your-unionized-ammonia-levels1-(2).pdf?sfvrsn=2">tại đây</a>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            Công thức lấy tại: <a href="https://floridadep.gov/waste/district-business-support/documents/un-ionized-ammonia-calculator">Florida Department of Environmental Protection</a>
+          </td>
+        </tr>
+      </table>
   </div>
 </template>
 
@@ -35,6 +46,38 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      ph: 6,
+      temperature: 32,
+      salinity: 0,
+      ammonia: 8,
+      message: " ",
+      level: ""
+    }
+  },
+  computed: {
+    result: function() {
+      return ((17*this.ammonia)/(14*(1+Math.pow(10, (0.09018+(2729.92/(this.temperature+273.15))+((0.1552-(0.0003142*this.temperature))*((19.9273*this.salinity)/(1000-(1.2005109*this.salinity)))))-this.ph)))).toFixed(7)
+    },
+  },
+  watch: {
+    result: function(value) {
+      if (value < 0.03) {
+        this.message = "An Toàn"
+        this.level = "green"
+      } else if (value >= 0.03 && value < 0.05) {
+        this.message = "Cảnh báo cần giảm NH3"
+        this.level = "#bf671b"
+      } else if (value >= 0.05 && value < 2) {
+        this.message = "Cá đang chết dần"
+        this.level = "red"
+      } else if (value >= 2) {
+        this.message = "Không còn gì để chết"
+        this.level = "blue"
+      }
+    }
   }
 }
 </script>
@@ -54,5 +97,16 @@ li {
 }
 a {
   color: #42b983;
+}
+label {
+  margin-right: 30px;
+}
+input {
+  width: 50px;
+  text-align: right;
+}
+.main {
+  width: 50%;
+  margin: 0 auto;
 }
 </style>
