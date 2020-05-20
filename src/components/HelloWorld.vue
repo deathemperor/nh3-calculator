@@ -34,7 +34,7 @@
         </tr>
         <tr>
           <td colspan="2">
-            Công thức lấy tại: <a href="https://floridadep.gov/waste/district-business-support/documents/un-ionized-ammonia-calculator">Florida Department of Environmental Protection</a>
+            Công thức tham khảo tại: <a href="https://floridadep.gov/waste/district-business-support/documents/un-ionized-ammonia-calculator">Florida Department of Environmental Protection</a>
           </td>
         </tr>
       </table>
@@ -49,10 +49,10 @@ export default {
   },
   data() {
     return {
-      ph: 6,
-      temperature: 32,
+      ph: 0,
+      temperature: 0,
       salinity: 0,
-      ammonia: 8,
+      ammonia: 0,
       message: " ",
       level: ""
     }
@@ -106,7 +106,9 @@ input {
   text-align: right;
 }
 .main {
-  width: 50%;
-  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
